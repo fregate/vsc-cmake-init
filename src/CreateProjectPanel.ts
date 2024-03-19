@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import ProjectConfigurationInterface from './ProjectConfigurationInterface';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -95,11 +96,21 @@ export default class CreateProjectPanel {
 	}
 
 	private onError(description: string) {
-		vscode.window.showErrorMessage("Error in configuration", "Can't create project!", description);
+		vscode.window.showErrorMessage("Error in configuration", { modal: true, detail: description });
 	}
 
-	private onCreate(message: object) {
+	private async onCreate(message: ProjectConfigurationInterface) {
 		console.log(message);
+
+		const projectName = message.projectName;
+		const projectDescription = message.projectDescription;
+		const outputName = message.targetName;
+		const cppStandart = message.cppStandart;
+
+		const templatePath = vscode.Uri.joinPath(this.extensionUri, 'media', 'CMakeLists.txt');
+		const cmakeTemplate = await vscode.workspace.fs.readFile(templatePath);
+
+		const res = eval("`" + cmakeTemplate.toString() + "`");
 	}
 
 	private async update() {
