@@ -20,7 +20,10 @@
 	<input type="text" id="text-project-name" value="New Project" />
 
 	<p>Project Description</p>
-	<input type="text" id="text-project-desc" placeholder="Enter brief project description" />
+	<input type="text" id="text-project-desc" placeholder="Enter brief project description (optional)" />
+
+	<p>Project Version</p>
+	<input type="text" id="text-project-version" placeholder="Enter project version (optional)" />
 
 	<p>Type of the project</p>
 	<select id="select-project-type">
@@ -43,6 +46,8 @@
 
 	<p>Additional compiler options</p>
 	<input type="text" id="text-compiler-options" />
+
+	<p>Advanced settings (in future): CMake Version</p>
 
 	<button id='btn-create-project' data-vscode-context='{"preventDefaultContextMenuItems": true }'>
 		Create Project

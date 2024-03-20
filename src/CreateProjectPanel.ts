@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import ProjectConfigurationInterface from './ProjectConfigurationInterface';
+import CMakeMinimumRequired from './functions/CMakeMinimumRequired';
+import Project from './functions/Project';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -100,18 +102,41 @@ export default class CreateProjectPanel {
 	}
 
 	private async onCreate(message: ProjectConfigurationInterface) {
-		console.log(message);
-
 		const projectName = message.projectName;
-		const projectDescription = message.projectDescription;
+		const projectDescription = message.description;
 		const outputName = message.targetName;
 		const cppStandart = message.cppStandart;
 
-		const templatePath = vscode.Uri.joinPath(this.extensionUri, 'media', 'CMakeLists.txt');
-		const cmakeTemplate = await vscode.workspace.fs.readFile(templatePath);
+		const version = new CMakeMinimumRequired("3.20");
+		const project = new Project(projectName, {
+				description: projectDescription, languages: ["CXX"], version: "0.1.0"}
+			);
 
-		const res = eval("`" + cmakeTemplate.toString() + "`");
-	}
+		// create CMakeLists.txt inplace
+		let cmakePathOnDisk: vscode.Uri;
+
+		// TODO: check if CMakeLists.txt already exists in a folder. Show error if present.
+		const folders = vscode.workspace.workspaceFolders;
+		if (folders && folders !== undefined) {
+			if (folders.length > 1) {
+				// choose folder to create in
+				// TODO remove. (it is hack for remove linter error)
+				cmakePathOnDisk = vscode.Uri.joinPath(folders[0].uri, 'CMakeLists.txt');
+			} else {
+				cmakePathOnDisk = vscode.Uri.joinPath(folders[0].uri, 'CMakeLists.txt');
+			}
+		} else {
+			const folder = await vscode.window.showOpenDialog({canSelectFiles: false, canSelectFolders: true, canSelectMany: false, title: "Select folder to save project"});
+			if (!folder) { return; }
+
+			cmakePathOnDisk = vscode.Uri.joinPath(folder[0], 'CMakeLists.txt');
+		}
+
+		vscode.workspace.fs.writeFile(cmakePathOnDisk, Buffer.from(project.toString()))
+			.then(() => vscode.workspace.openTextDocument(cmakePathOnDisk))
+			.then(doc => vscode.window.showTextDocument(doc))
+			.then(() => this.dispose()); // close configuration panel
+}
 
 	private async update() {
 		const webview = this.panel.webview;

@@ -1,6 +1,7 @@
 export default interface ProjectConfigurationInterface {
 	projectName: string;
 	targetName: string;
-	projectDescription: string;
+	description: string;
+	compilerOptions: string;
 	cppStandart: string;
 }
