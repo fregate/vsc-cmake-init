@@ -30,7 +30,7 @@ export default class ArgumentPair {
 
 	public toString(options?: ArgumentPairFormat): string {
 		if (!this.values) {
-			return this.name;
+			return this.formatValue(this.name, options);
 		}
 
 		const intendation = options?.intendationSize ? " ".repeat(options.intendationSize) : "";
