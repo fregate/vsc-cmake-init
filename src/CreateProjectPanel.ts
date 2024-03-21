@@ -12,6 +12,7 @@ import TargetSources from './units/TargetSources';
 import wrapVariable from './units/WrapVariable';
 import Comment from './units/Comment';
 import TargetIncludeDirectories from './units/TargetIncludeDirectories';
+import TargetLinkLibraries from './units/TargetLinkLibraries';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -135,6 +136,12 @@ export default class CreateProjectPanel {
 				publicIncludes: ["include"],
 			});
 
+
+		const libs = new TargetLinkLibraries(wrapVariable(targetName),
+			{
+				publicLibraries: ["Erlang::EI", "Erlang::Erlang"],
+			});
+
 		// create CMakeLists.txt inplace
 		let cmakePathOnDisk: vscode.Uri;
 
@@ -171,6 +178,7 @@ export default class CreateProjectPanel {
 				emptyLine,
 				sources,
 				includes,
+				libs,
 			])
 			.then(() => this.dispose()); // close configuration panel
 	}
