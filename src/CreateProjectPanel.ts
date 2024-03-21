@@ -4,6 +4,8 @@ import CMakeMinimumRequired from './units/CMakeMinimumRequired';
 import Project from './units/Project';
 import CMakeUnit from './units/CMakeUnit';
 import emptyLine from './units/EmptyLine';
+import TargetCompileFeatures from './units/TargetCompileFeatures';
+import { AddLibrary, LibraryType } from './units/AddLibrary';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -104,11 +106,13 @@ export default class CreateProjectPanel {
 
 	private async onCreate(message: ProjectConfigurationInterface) {
 		const outputName = message.targetName;
-		const cppStandart = message.cppStandart;
 
 		const project = new Project(message.projectName, {
 				description: message.description, languages: ["CXX"], version: "0.1.0"}
 			);
+
+		const std = new TargetCompileFeatures(outputName, { publicFeatures: [message.cppStandart] });
+		const lib = new AddLibrary(outputName, { type: LibraryType.static });
 
 		// create CMakeLists.txt inplace
 		let cmakePathOnDisk: vscode.Uri;
@@ -130,7 +134,15 @@ export default class CreateProjectPanel {
 			cmakePathOnDisk = vscode.Uri.joinPath(folder[0], 'CMakeLists.txt');
 		}
 
-		this.write(cmakePathOnDisk, [new CMakeMinimumRequired("3.20"), emptyLine, project])
+		this.write(cmakePathOnDisk,
+				[new CMakeMinimumRequired("3.20"),
+				emptyLine,
+				project,
+				emptyLine,
+				lib,
+				emptyLine,
+				std,
+			])
 			.then(() => this.dispose()); // close configuration panel
 	}
 

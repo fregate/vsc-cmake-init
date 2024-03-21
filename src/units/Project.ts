@@ -1,7 +1,7 @@
 import ArgumentPair, { skipEmptyArguments } from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
-export interface ProjectOptions {
+interface ProjectOptions {
 	version?: string;
 	description?: string;
 	homePage?: string;
