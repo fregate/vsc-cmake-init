@@ -3,7 +3,7 @@ import ProjectConfigurationInterface from './ProjectConfigurationInterface';
 import CMakeMinimumRequired from './units/CMakeMinimumRequired';
 import Project from './units/Project';
 import CMakeUnit from './units/CMakeUnit';
-import NL from './units/NL';
+import emptyLine from './units/EmptyLine';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -103,14 +103,11 @@ export default class CreateProjectPanel {
 	}
 
 	private async onCreate(message: ProjectConfigurationInterface) {
-		const projectName = message.projectName;
-		const projectDescription = message.description;
 		const outputName = message.targetName;
 		const cppStandart = message.cppStandart;
 
-		const version = new CMakeMinimumRequired("3.20");
-		const project = new Project(projectName, {
-				description: projectDescription, languages: ["CXX"], version: "0.1.0"}
+		const project = new Project(message.projectName, {
+				description: message.description, languages: ["CXX"], version: "0.1.0"}
 			);
 
 		// create CMakeLists.txt inplace
@@ -133,7 +130,7 @@ export default class CreateProjectPanel {
 			cmakePathOnDisk = vscode.Uri.joinPath(folder[0], 'CMakeLists.txt');
 		}
 
-		this.write(cmakePathOnDisk, [version, NL, project])
+		this.write(cmakePathOnDisk, [new CMakeMinimumRequired("3.20"), emptyLine, project])
 			.then(() => this.dispose()); // close configuration panel
 	}
 

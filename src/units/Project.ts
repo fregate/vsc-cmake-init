@@ -1,4 +1,4 @@
-import ArgumentPair, { qouteString, skipEmptyArguments } from "./ArgumentPair";
+import ArgumentPair, { skipEmptyArguments } from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
 export interface ProjectOptions {
