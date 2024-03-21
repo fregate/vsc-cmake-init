@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import ProjectConfigurationInterface from './ProjectConfigurationInterface';
-import CMakeMinimumRequired from './functions/CMakeMinimumRequired';
-import Project from './functions/Project';
+import CMakeMinimumRequired from './units/CMakeMinimumRequired';
+import Project from './units/Project';
+import CMakeUnit from './units/CMakeUnit';
+import NL from './units/NL';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -132,11 +133,21 @@ export default class CreateProjectPanel {
 			cmakePathOnDisk = vscode.Uri.joinPath(folder[0], 'CMakeLists.txt');
 		}
 
-		vscode.workspace.fs.writeFile(cmakePathOnDisk, Buffer.from(project.toString()))
-			.then(() => vscode.workspace.openTextDocument(cmakePathOnDisk))
-			.then(doc => vscode.window.showTextDocument(doc))
+		this.write(cmakePathOnDisk, [version, NL, project])
 			.then(() => this.dispose()); // close configuration panel
-}
+	}
+
+	private write(pathOnDisk: vscode.Uri, content: CMakeUnit[]): Thenable<void> {
+		return vscode.workspace.fs.writeFile(pathOnDisk, Buffer.from(""))
+			.then(() => vscode.workspace.openTextDocument(pathOnDisk))
+			.then(doc => vscode.window.showTextDocument(doc))
+			.then(async editor => {
+				await editor.edit(builder =>
+						content.forEach(c =>
+								builder.insert(new vscode.Position(editor.document.lineCount, 0), c.toString()))
+				).then(() => editor.document.save());
+			});
+	}
 
 	private async update() {
 		const webview = this.panel.webview;
@@ -148,7 +159,6 @@ export default class CreateProjectPanel {
 
 		// Clean up our resources
 		this.panel.dispose();
-
 		while (this.disposables.length) {
 			const x = this.disposables.pop();
 			if (x) {

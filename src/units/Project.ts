@@ -1,5 +1,5 @@
 import ArgumentPair, { qouteString, skipEmptyArguments } from "./ArgumentPair";
-import CMakeFunction from "./CMakeFunction";
+import CMakeUnit from "./CMakeUnit";
 
 export interface ProjectOptions {
 	version?: string;
@@ -8,16 +8,16 @@ export interface ProjectOptions {
 	languages?: string[];
 }
 
-export default class Project extends CMakeFunction {
+export default class Project implements CMakeUnit {
 	private projectName: ArgumentPair;
 	private version?: ArgumentPair;
 	private description?: ArgumentPair;
 	private homePage?: ArgumentPair;
 	private languages?: ArgumentPair;
 
-	constructor(name: string, options?: ProjectOptions) {
-		super("project");
+	private static readonly functionName: string = "project";
 
+	constructor(name: string, options?: ProjectOptions) {
 		this.projectName = new ArgumentPair(name);
 
 		if (!options) { return; }
@@ -30,6 +30,6 @@ export default class Project extends CMakeFunction {
 	public toString(): string {
 		const fields = skipEmptyArguments(this.version, this.description, this.homePage, this.languages);
 		const res = "\n" + fields.map(f => f.toString({intendationSize: 4})).join("\n");
-		return `${this.name}(${qouteString(this.projectName.toString())}${res})`;
+		return `${Project.functionName}(${this.projectName.toString()}${res})\n`;
 	}
 }

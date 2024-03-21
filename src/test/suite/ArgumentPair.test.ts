@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import ArgumentPair, { skipEmptyArguments } from '../../functions/ArgumentPair';
+import ArgumentPair, { skipEmptyArguments } from '../../units/ArgumentPair';
 
 suite('Extension Test Suite', () => {
 	// test('skipEmptyArguments', () => {
