@@ -45,6 +45,6 @@ function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
     return value !== null && value !== undefined;
 }
 
-export function skipEmptyArguments(...args: (ArgumentPair | null | undefined)[]): ArgumentPair[] {
+export function filterEmptyArguments(...args: (ArgumentPair | null | undefined)[]): ArgumentPair[] {
 	return args.filter(notEmpty);
 }

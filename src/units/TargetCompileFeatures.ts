@@ -1,4 +1,4 @@
-import ArgumentPair, { skipEmptyArguments } from "./ArgumentPair";
+import ArgumentPair, { filterEmptyArguments } from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
 interface TargetCompileFeaturesOptions {
@@ -30,7 +30,7 @@ export default class TargetCompileFeatures implements CMakeUnit {
 	}
 
 	public toString(): string {
-		const fields = skipEmptyArguments(this.publicFeatures, this.privateFeatures, this.interfaceFeatures);
+		const fields = filterEmptyArguments(this.publicFeatures, this.privateFeatures, this.interfaceFeatures);
 		const split = fields.length > 1 ? "\n" : " ";
 		const res = fields.map(f => f.toString({intendationSize: fields.length > 1 ? 4 : 0})).join("\n");
 		return `${TargetCompileFeatures.functionName}(${this.target}${split}${res})\n`;

@@ -1,4 +1,4 @@
-import ArgumentPair, { skipEmptyArguments } from "./ArgumentPair";
+import ArgumentPair, { filterEmptyArguments } from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
 interface TargetSourcesOptions {
@@ -26,7 +26,7 @@ export default class TargetSources implements CMakeUnit {
 	}
 
 	public toString(): string {
-		const fields = skipEmptyArguments(this.publicSources, this.privateSources, this.interfaceSources);
+		const fields = filterEmptyArguments(this.publicSources, this.privateSources, this.interfaceSources);
 		const res = "\n" + fields.map(f => f.toString({intendationSize: 4, multiline: true})).join("\n\n");
 		return `${TargetSources.functionName}(${this.target}${res})\n`;
 	}

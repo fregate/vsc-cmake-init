@@ -1,4 +1,4 @@
-import ArgumentPair, { skipEmptyArguments } from "./ArgumentPair";
+import ArgumentPair, { filterEmptyArguments } from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
 export enum LibraryType {
@@ -28,7 +28,7 @@ export class AddLibrary implements CMakeUnit {
 	}
 
 	toString(): string {
-		const fields = skipEmptyArguments(this.type, this.excludeFromAll);
+		const fields = filterEmptyArguments(this.type, this.excludeFromAll);
 		let res = fields.map(f => f.toString({intendationSize: 4})).join(" ");
 		if (res.length > 0) { res = " " + res; }
 		return `${AddLibrary.functionName}(${this.name}${res})`;

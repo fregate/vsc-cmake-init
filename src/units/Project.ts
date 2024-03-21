@@ -1,4 +1,4 @@
-import ArgumentPair, { skipEmptyArguments } from "./ArgumentPair";
+import ArgumentPair, { filterEmptyArguments } from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
 interface ProjectOptions {
@@ -28,7 +28,7 @@ export default class Project implements CMakeUnit {
 	}
 
 	public toString(): string {
-		const fields = skipEmptyArguments(this.version, this.description, this.homePage, this.languages);
+		const fields = filterEmptyArguments(this.version, this.description, this.homePage, this.languages);
 		const res = "\n" + fields.map(f => f.toString({intendationSize: 4})).join("\n");
 		return `${Project.functionName}(${this.projectName}${res})\n`;
 	}
