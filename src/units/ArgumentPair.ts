@@ -34,10 +34,6 @@ export default class ArgumentPair {
 		}
 
 		const intendation = options?.intendationSize ? " ".repeat(options.intendationSize) : "";
-		if (this.values.size === 1) {
-			return intendation + `${this.name} ${this.formatValue(this.getValue()!, options)}`;
-		}
-
 		let res = intendation + this.name;
 		this.values.forEach(v => 
 			res += (options?.multiline ? "\n" + intendation + intendation : " ") + this.formatValue(v, options));

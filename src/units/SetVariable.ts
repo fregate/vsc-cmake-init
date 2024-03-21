@@ -1,7 +1,7 @@
 import ArgumentPair from "./ArgumentPair";
 import CMakeUnit from "./CMakeUnit";
 
-export default class Set implements CMakeUnit {
+export default class SetVariable implements CMakeUnit {
 	private variable: ArgumentPair;
 
 	private static readonly functionName: string = "set";
@@ -11,6 +11,6 @@ export default class Set implements CMakeUnit {
 	}
 
 	public toString(): string {
-		return `${Set.functionName}(${this.variable})\n`;
+		return `${SetVariable.functionName}(${this.variable})\n`;
 	}
 }

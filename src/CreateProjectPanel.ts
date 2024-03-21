@@ -7,6 +7,9 @@ import emptyLine from './units/EmptyLine';
 import TargetCompileFeatures from './units/TargetCompileFeatures';
 import { AddLibrary, LibraryType } from './units/AddLibrary';
 import { AddExecutable } from './units/AddExecutable';
+import SetVariable from './units/SetVariable';
+import TargetSources from './units/TargetSources';
+import wrapVariable from './units/WrapVariable';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -112,9 +115,18 @@ export default class CreateProjectPanel {
 				description: message.description, languages: ["CXX"], version: "0.1.0"}
 			);
 
-		const std = new TargetCompileFeatures(outputName, { publicFeatures: [message.cppStandart] });
 		const lib = new AddLibrary(outputName, { type: LibraryType.static });
 		const exe = new AddExecutable(outputName);
+
+		const targetName = "LIB_NAME";
+		const set = new SetVariable(targetName, outputName);
+
+		const std = new TargetCompileFeatures(wrapVariable(targetName), { publicFeatures: [message.cppStandart] });
+		const sources = new TargetSources(wrapVariable(targetName),
+			{
+				publicSources: ["src/main.cpp", "src/utils.cpp"],
+				privateSources: ["src/utils.h"]
+			});
 
 		// create CMakeLists.txt inplace
 		let cmakePathOnDisk: vscode.Uri;
@@ -143,9 +155,13 @@ export default class CreateProjectPanel {
 				emptyLine,
 				lib,
 				emptyLine,
+				set, emptyLine,
 				std,
 				emptyLine,
 				exe,
+				emptyLine,
+				sources,
+				emptyLine,
 			])
 			.then(() => this.dispose()); // close configuration panel
 	}
