@@ -11,6 +11,6 @@ export default class CMakeMinimumRequired implements CMakeUnit {
 	}
 
 	public toString(): string {
-		return `${CMakeMinimumRequired.functionName}(${this.version.toString()})\n`;
+		return `${CMakeMinimumRequired.functionName}(${this.version})\n`;
 	}
 }

@@ -11,6 +11,6 @@ export default class Set implements CMakeUnit {
 	}
 
 	public toString(): string {
-		return `${Set.functionName}(${this.variable.toString()})\n`;
+		return `${Set.functionName}(${this.variable})\n`;
 	}
 }

@@ -6,6 +6,7 @@ import CMakeUnit from './units/CMakeUnit';
 import emptyLine from './units/EmptyLine';
 import TargetCompileFeatures from './units/TargetCompileFeatures';
 import { AddLibrary, LibraryType } from './units/AddLibrary';
+import { AddExecutable } from './units/AddExecutable';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -113,6 +114,7 @@ export default class CreateProjectPanel {
 
 		const std = new TargetCompileFeatures(outputName, { publicFeatures: [message.cppStandart] });
 		const lib = new AddLibrary(outputName, { type: LibraryType.static });
+		const exe = new AddExecutable(outputName);
 
 		// create CMakeLists.txt inplace
 		let cmakePathOnDisk: vscode.Uri;
@@ -142,6 +144,8 @@ export default class CreateProjectPanel {
 				lib,
 				emptyLine,
 				std,
+				emptyLine,
+				exe,
 			])
 			.then(() => this.dispose()); // close configuration panel
 	}

@@ -30,6 +30,6 @@ export default class Project implements CMakeUnit {
 	public toString(): string {
 		const fields = skipEmptyArguments(this.version, this.description, this.homePage, this.languages);
 		const res = "\n" + fields.map(f => f.toString({intendationSize: 4})).join("\n");
-		return `${Project.functionName}(${this.projectName.toString()}${res})\n`;
+		return `${Project.functionName}(${this.projectName}${res})\n`;
 	}
 }
