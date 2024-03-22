@@ -1,18 +1,20 @@
 import * as vscode from 'vscode';
 import ProjectConfigurationInterface from './ProjectConfigurationInterface';
-import CMakeMinimumRequired from './units/CMakeMinimumRequired';
-import Project from './units/Project';
-import CMakeUnit from './units/CMakeUnit';
-import emptyLine from './units/EmptyLine';
-import TargetCompileFeatures from './units/TargetCompileFeatures';
-import { AddLibrary, LibraryType } from './units/AddLibrary';
-import { AddExecutable } from './units/AddExecutable';
-import SetVariable from './units/SetVariable';
-import TargetSources from './units/TargetSources';
-import wrapVariable from './units/WrapVariable';
-import Comment from './units/Comment';
-import TargetIncludeDirectories from './units/TargetIncludeDirectories';
-import TargetLinkLibraries from './units/TargetLinkLibraries';
+import CMakeMinimumRequired from '../units/CMakeMinimumRequired';
+import Project from '../units/Project';
+import CMakeUnit from '../units/CMakeUnit';
+import emptyLine from '../units/EmptyLine';
+import TargetCompileFeatures from '../units/TargetCompileFeatures';
+import { AddLibrary, LibraryType } from '../units/AddLibrary';
+import { AddExecutable } from '../units/AddExecutable';
+import SetVariable from '../units/SetVariable';
+import TargetSources from '../units/TargetSources';
+import wrapVariable from '../units/WrapVariable';
+import Comment from '../units/Comment';
+import TargetIncludeDirectories from '../units/TargetIncludeDirectories';
+import TargetLinkLibraries from '../units/TargetLinkLibraries';
+import { getNonce } from '../utilities/getNonce';
+import { getUri } from '../utilities/getUri';
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 	return {
@@ -20,17 +22,11 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 		enableScripts: true,
 
 		// And restrict the webview to only loading content from our extension's `media` directory.
-		localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'media')]
+		localResourceRoots: [
+			vscode.Uri.joinPath(extensionUri, 'media'),
+			vscode.Uri.joinPath(extensionUri, 'out')
+		]
 	};
-}
-
-function getNonce() {
-	let text = '';
-	const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	for (let i = 0; i < 32; i++) {
-		text += possible.charAt(Math.floor(Math.random() * possible.length));
-	}
-	return text;
 }
 
 export default class CreateProjectPanel {
@@ -42,7 +38,7 @@ export default class CreateProjectPanel {
 	private readonly extensionUri: vscode.Uri;
 	private disposables: vscode.Disposable[] = [];
 
-	public static createOrShow(extensionUri: vscode.Uri) {
+	public static render(extensionUri: vscode.Uri) {
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
@@ -214,21 +210,7 @@ export default class CreateProjectPanel {
 	}
 
 	private async getHtmlForWebview(webview: vscode.Webview) {
-		// Local path to main script run in the webview
-		const scriptPathOnDisk = vscode.Uri.joinPath(this.extensionUri, 'media', 'ex.js');
-
-		// And the uri we use to load this script in the webview
-		const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
-
-		// Local path to css styles
-		const styleResetPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'reset.css');
-		const stylesPathMainPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'vscode.css');
-
-		// Uri to load styles into webview
-		const stylesResetUri = webview.asWebviewUri(styleResetPath);
-		const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
-
-		// Use a nonce to only allow specific scripts to be run
+		const scriptUri = getUri(webview, this.extensionUri, ['out', 'webview.js']);
 		const nonce = getNonce();
 
 		// Read template
