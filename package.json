@@ -9,9 +9,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:cmake-init.initProject"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [

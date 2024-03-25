@@ -1,6 +1,4 @@
 const { build } = require("esbuild");
-const { default: copy } = require("esbuild-plugin-copy");
-const { cwd } = require("process");
 
 const baseConfig = {
   bundle: true,
@@ -16,16 +14,14 @@ const extensionConfig = {
   entryPoints: ["./src/extension.ts"],
   outfile: "./out/extension.js",
   external: ["vscode"],
-  plugins: [
-	copy({
-		resolveFrom: 'cwd',
-		assets: {
-			from: ['./assets/*'],
-			to: ['./out']
-		}
-	}),
-  ]
 };
+
+const copyConfig = {
+	...baseConfig,
+	entryPoints: ["./assets/configuration.html", "./assets/styles.css"],
+	outdir: "./out/",
+	loader: { ".html" : 'copy', ".css" : 'copy' }
+  };
 
 const watchConfig = {
 	watch: {
@@ -41,7 +37,7 @@ const watchConfig = {
 	  },
 	},
   };
-  
+
   const webviewConfig = {
 	...baseConfig,
 	target: "es2020",
@@ -49,18 +45,21 @@ const watchConfig = {
 	entryPoints: ["./src/webview/main.ts"],
 	outfile: "./out/webview.js",
   };
-  
+
   (async () => {
 	const args = process.argv.slice(2);
 	try {
 	  if (args.includes("--watch")) {
-		// Build and watch extension and webview code
 		console.log("[watch] build started");
 		await build({
 		  ...extensionConfig,
 		  ...watchConfig,
 		});
 		await build({
+			...copyConfig,
+			...watchConfig,
+		  });
+		  await build({
 		  ...webviewConfig,
 		  ...watchConfig,
 		});
@@ -68,6 +67,7 @@ const watchConfig = {
 	  } else {
 		// Build extension and webview code
 		await build(extensionConfig);
+		await build(copyConfig);
 		await build(webviewConfig);
 		console.log("build complete");
 	  }

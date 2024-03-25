@@ -207,6 +207,7 @@ export default class CreateProjectPanel {
 	}
 
 	private async getHtmlForWebview(webview: vscode.Webview) {
+		const stylesUri = getUri(webview, this.extensionUri, ['out', 'styles.css']);
 		const scriptUri = getUri(webview, this.extensionUri, ['out', 'webview.js']);
 		const nonce = getNonce();
 
