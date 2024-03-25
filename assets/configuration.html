@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; font-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
+  </head>
+
+  <body>
+	<div class="config-row">
+		<vscode-text-field id="text-project-name" value="New Project">Project Name (required)</vscode-text-field>
+	</div>
+
+	<div class="config-row">
+		<vscode-text-field id="text-project-desc" placeholder="Enter brief project description (optional)">Project Description</vscode-text-field>
+	</div>
+
+	<div class="config-row">
+		<vscode-text-field id="text-project-version" placeholder="Enter project version (optional)">Project Version</vscode-text-field>
+	</div>
+
+	<div class="config-row">
+		<label for="select-project-type">Type of the project</label>
+		<div>
+		<vscode-dropdown id="select-project-type">
+			<vscode-option value="exe">Executable</vscode-option>
+			<vscode-option value="static">Static Library</vscode-option>
+			<vscode-option value="shared">Shared Library</vscode-option>
+		</vscode-dropdown>
+		</div>
+	</div>
+
+	<div class="config-row">
+		<vscode-text-field id="text-target-name">Output Name (required)</vscode-text-field>
+	</div>
+
+	<div class="config-row">
+		<label for="select-cpp-standart">C++ stadart to use</label>
+		<div>
+		<vscode-dropdown id="select-cpp-standart">
+			<vscode-option value="cxx_std_11">C++11</vscode-option>
+			<vscode-option value="cxx_std_14">C++14</vscode-option>
+			<vscode-option value="cxx_std_17">C++17</vscode-option>
+			<vscode-option value="cxx_std_20" selected>C++20</vscode-option>
+			<vscode-option value="cxx_std_23">C++23</vscode-option>
+		</vscode-dropdown>
+		</div>
+	</div>
+
+	<div class="config-row">
+		<vscode-text-field id="text-target-name">Output Name (required)</vscode-text-field>
+	</div>
+
+	<div class="config-row">
+		<vscode-text-field id="text-compiler-options">Additional compiler options</vscode-text-field>
+	</div>
+
+	<p>Advanced settings (in future): CMake Version</p>
+
+	<vscode-button id='btn-create-project' data-vscode-context='{"preventDefaultContextMenuItems": true }'>
+		Create Project
+	</vscode-button>
+
+	<script type="module" nonce="${nonce}" src="${scriptUri}"></script>
+  </body>
+</html>

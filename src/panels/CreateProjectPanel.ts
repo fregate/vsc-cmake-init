@@ -22,10 +22,7 @@ function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
 		enableScripts: true,
 
 		// And restrict the webview to only loading content from our extension's `media` directory.
-		localResourceRoots: [
-			vscode.Uri.joinPath(extensionUri, 'media'),
-			vscode.Uri.joinPath(extensionUri, 'out')
-		]
+		localResourceRoots: [ vscode.Uri.joinPath(extensionUri, 'out') ]
 	};
 }
 
@@ -214,7 +211,7 @@ export default class CreateProjectPanel {
 		const nonce = getNonce();
 
 		// Read template
-		const htmlPath = vscode.Uri.joinPath(this.extensionUri, 'media', 'configuration.html');
+		const htmlPath = vscode.Uri.joinPath(this.extensionUri, 'out', 'configuration.html');
 		const html = await vscode.workspace.fs.readFile(htmlPath);
 
 		return eval("`" + html.toString() + "`");

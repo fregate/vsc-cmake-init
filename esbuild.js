@@ -1,4 +1,6 @@
 const { build } = require("esbuild");
+const { default: copy } = require("esbuild-plugin-copy");
+const { cwd } = require("process");
 
 const baseConfig = {
   bundle: true,
@@ -14,6 +16,15 @@ const extensionConfig = {
   entryPoints: ["./src/extension.ts"],
   outfile: "./out/extension.js",
   external: ["vscode"],
+  plugins: [
+	copy({
+		resolveFrom: 'cwd',
+		assets: {
+			from: ['./assets/*'],
+			to: ['./out']
+		}
+	}),
+  ]
 };
 
 const watchConfig = {

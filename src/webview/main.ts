@@ -1,6 +1,6 @@
-import { provideVSCodeDesignSystem, vsCodeButton } from "@vscode/webview-ui-toolkit";
+import { provideVSCodeDesignSystem, vsCodeButton, vsCodeDropdown, vsCodeOption, vsCodeTextField } from "@vscode/webview-ui-toolkit";
 
-provideVSCodeDesignSystem().register(vsCodeButton());
+provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOption(), vsCodeTextField());
 
 const vscode = acquireVsCodeApi();
 
