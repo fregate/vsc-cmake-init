@@ -105,17 +105,15 @@ export default class CreateProjectPanel {
 	}
 
 	private async onCreate(message: ProjectConfigurationInterface) {
-		const outputName = message.targetName;
-
 		const project = new Project(message.projectName, {
 				description: message.description, languages: ["CXX"], version: "0.1.0"}
 			);
 
-		const lib = new AddLibrary(outputName, { type: LibraryType.static });
-		const exe = new AddExecutable(outputName);
+		const lib = new AddLibrary(message.outputName, { type: LibraryType.static });
+		const exe = new AddExecutable(message.outputName);
 
 		const targetName = "LIB_NAME";
-		const set = new SetVariable(targetName, outputName);
+		const set = new SetVariable(targetName, message.outputName);
 
 		const std = new TargetCompileFeatures(wrapVariable(targetName), { publicFeatures: [message.cppStandart] });
 		const sources = new TargetSources(wrapVariable(targetName),

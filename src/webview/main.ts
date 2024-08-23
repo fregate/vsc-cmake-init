@@ -4,7 +4,7 @@ provideVSCodeDesignSystem().register(vsCodeButton(), vsCodeDropdown(), vsCodeOpt
 
 const vscode = acquireVsCodeApi();
 
-function generateTargetName(projectName: string) {
+function generateTargetNameFromProject(projectName: string) {
 	if (!projectName) { return; }
 	if (projectName.length === 0) { return; }
 	const ww = projectName.split(" ");
@@ -22,8 +22,6 @@ export function sendError(error: string) {
 };
 
 window.onload = () => {
-	generateTargetName((document.getElementById("text-project-name") as HTMLInputElement).value);
-
 	document.getElementById("btn-create-project")!.addEventListener("click",
 		() => {
 			// gather all fields to object
@@ -42,15 +40,11 @@ window.onload = () => {
 			vscode.postMessage({
 				command: "create",
 				projectName: projectName,
-				targetName: targetName,
+				outputName: targetName,
 				description: projectDescription,
 				compilerOptions: compilerOptions,
 				cppStandart: cppStandart
 			});
 		}
 	);
-
-	document.getElementById("text-project-name")!.addEventListener("input", (e: Event) => {
-		generateTargetName((e.currentTarget as HTMLInputElement).value);
-	});
 };
